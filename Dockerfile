@@ -1,13 +1,13 @@
-FROM centos:7.4.1708
+#% FROM centos:7.4.1708
+#% 
+#% RUN yum install -y tigervnc-server-1.8.0-13.el7 \
+#% 	wget \
+#% 	git \
+#% 	less \
+#% 	; \
+#% 	yum clean all
 
-RUN yum install -y tigervnc-server-1.8.0-13.el7 \
-	wget \
-	git \
-	less \
-	; \
-	yum clean all
-
-####FROM ffcbf375d801
+FROM 60fc666bc99a
 
 ENV	DISPLAY=:1 \
 	NO_VNC_PORT=6901 \
@@ -27,13 +27,15 @@ ENV	HOME=/home/user2 \
 WORKDIR $HOME
 
 ADD scripts scripts
+RUN mkdir -p $STARTUPDIR && mv scripts/vnc_startup.sh $STARTUPDIR/. \
+	&& mv scripts/chrome-init.sh $STARTUPDIR/. \
+	&& mv scripts/wm_startup.sh $HOME/. 
 
-# RUN scripts/tigervnc.sh
-
+# RUN scripts/fix-xstartup.sh 
 RUN scripts/no_vnc.sh
 
 # CMD ["/bin/bash"]
-CMD ["tail", "-f", "/dev/null"]
+# CMD ["tail", "-f", "/dev/null"]
 
-# ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
-# CMD ["--tail-log"]
+ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
+CMD ["--tail-log"]
