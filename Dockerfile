@@ -1,9 +1,19 @@
 FROM centos:7.4.1708
 
+RUN yum install -y tigervnc-server-1.8.0-13.el7 \
+	wget \
+	git \
+	less \
+	; \
+	yum clean all
+
+####FROM ffcbf375d801
+
 ENV	DISPLAY=:1 \
 	NO_VNC_PORT=6901 \
 	VNC_PORT=5901 \
 	SSH_PORT=22
+EXPOSE $VNC_PORT $NO_VNC_PORT $SSH_PORT
 
 ENV	HOME=/home/user2 \
 	TERM=xterm \
@@ -16,11 +26,14 @@ ENV	HOME=/home/user2 \
 
 WORKDIR $HOME
 
+ADD scripts scripts
+
 # RUN scripts/tigervnc.sh
-RUN yum install -y tigervnc-server-1.8.0-13.el7
+
+RUN scripts/no_vnc.sh
 
 # CMD ["/bin/bash"]
-# CMD ["tail", "-f", "/dev/null"]
+CMD ["tail", "-f", "/dev/null"]
 
-ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
-CMD ["--tail-log"]
+# ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
+# CMD ["--tail-log"]
