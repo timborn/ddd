@@ -5,7 +5,6 @@ actually work together.
 
 Tue Apr 23 09:29:45 MST 2019
 ----------------------------
-tigervnc and NoVNC both installed.  How does VNC server get started? 
 When I run vncserver by hand, it asks me questions (interactive) and subsequent starts seem to 
 come up and immediately kill the process.  Huh?
 
