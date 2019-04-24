@@ -1,0 +1,33 @@
+Wed Apr 24 09:42:19 MST 2019
+----------------------------
+Using any competent browser, a user should be able to open host:port (where port is typically 69xx)
+and be presented with NoVNC password prompt.  Getting past that presents a full Linux desktop
+with all necessary developer tools for Java development preinstalled and configured.
+
+These are disposable containers so use of git for persistance of code changes is essential.
+
+The user will run as a generic user (user2) with access to sudo, should that be necessary.
+
+The entrypoint for all this are the last lines of the Dockerfile, which executes
+
+	ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
+	CMD ["--tail-log"]
+
+... which you can see when you watch the logs for the container.
+
+Dockerfile 
+	--> vnc_startup.sh
+
+		--> /headless/noVNC/utils/launch.sh \	# start NoVNC
+		    --vnc localhost:$VNC_PORT \
+		    --listen $NO_VNC_PORT &
+		--> vncserver $DISPLAY \		# start VNC
+		    -depth $VNC_COL_DEPTH \
+		    -geometry $VNC_RESOLUTION \
+                    -xstartup $HOME/scripts/xstartup
+		--> $HOME/wm_startup.sh			# starts xfce
+
+NB vncserver will generate $HOME/.vnc/xstartup, but for some reason the generated version included
+a line to kill off the process just started, so we inject our own xstartup and explicitly use it.
+
+If VNC_PW is passed into the container when it starts, vncpasswd will be changed accordingly.

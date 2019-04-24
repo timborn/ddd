@@ -5,7 +5,7 @@
 #% 	git \
 #% 	less \
 #% 	; \
-#% 	yum clean all
+#% 	yum clean all && rm -rf /var/cache/yum
 
 FROM 60fc666bc99a
 
@@ -27,12 +27,16 @@ ENV	HOME=/home/user2 \
 WORKDIR $HOME
 
 ADD scripts scripts
+# the only one missing from STARTUPDIR is generate_container_user
 RUN mkdir -p $STARTUPDIR && mv scripts/vnc_startup.sh $STARTUPDIR/. \
 	&& mv scripts/chrome-init.sh $STARTUPDIR/. \
 	&& mv scripts/wm_startup.sh $HOME/. 
 
 # RUN scripts/fix-xstartup.sh 
 RUN scripts/no_vnc.sh
+
+# Install xfce UI
+RUN scripts/xfce_ui.sh 
 
 # CMD ["/bin/bash"]
 # CMD ["tail", "-f", "/dev/null"]

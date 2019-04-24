@@ -20,5 +20,6 @@ wget -qO- $TARBALL | tar xz --strip 1 -C $NO_VNC_HOME
 # pre-pull websockify
 wget -qO- $SOCKBALL | tar xz --strip 1 -C $NO_VNC_HOME/utils/websockify
 chmod +x -v $NO_VNC_HOME/utils/*.sh
-## create index.html to forward automatically to `vnc_auto.html`
-ln -s $NO_VNC_HOME/vnc_auto.html $NO_VNC_HOME/index.html
+## create index.html to forward automatically to `vnc_lite.html`
+## USED TO link to vnc_auto.html but that disappeared in version upgrade
+ln -s $NO_VNC_HOME/vnc_lite.html $NO_VNC_HOME/index.html
